@@ -290,6 +290,7 @@ if ($_GET['menusil']=="ok") {
 	} else {
 
 		header("location:../production/menu.php?sil=no");
+        echo "git deneme";
 
 	}
 }
