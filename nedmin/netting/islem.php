@@ -4,7 +4,104 @@ session_start();
 // SESSION kullanmak için sayfa başında bu fonksiyonların tanımlanması gerekir.
 //SESSION fonksiyonu kullanıcının aktifiliğini tutar.
 include 'baglan.php';
-include'../production/fonksiyon.php';
+include '../production/fonksiyon.php';
+
+if(isset($_POST['kullanicikaydet'])){
+    echo "dogru yerdesin";
+}
+
+
+
+if (isset($_POST['sliderduzenle'])) {
+
+    $slider_id = $_POST['slider_id'];
+
+    $sliderkaydet = $db->prepare("UPDATE slider SET
+		slider_ad=:slider_ad,
+		slider_resimyol=:slider_resimyol,
+        slider_sira=:slider_sira,
+        slider_link=:slider_link,
+        slider_durum=:slider_durum
+		WHERE slider_id=$slider_id");
+
+    $update = $sliderkaydet->execute(array(
+        'slider_ad' => $_POST['slider_ad'],
+        'slider_resimyol' => $_POST['slider_resimyol'],
+        'slider_sira' => $_POST['slider_sira'],
+        'slider_link' => $_POST['slider_link'],
+        'slider_durum' => $_POST['slider_durum']
+    ));
+
+
+    if ($update) {
+
+        Header("Location:../production/slider-duzenle.php?slider_id=" . $slider_id ."&durum=ok");
+    } else {
+
+        Header("Location:../production/slider-duzenle.php?slider_id=" . $slider_id. "&durum=no");
+    }
+}
+
+if (isset($_POST['sliderkaydet'])) {
+
+
+    $uploads_dir = '../../dimg/slider';
+    @$tmp_name = $_FILES['slider_resimyol']["tmp_name"];
+    @$name = $_FILES['slider_resimyol']["name"];
+
+
+    //resmin isminin benzersiz olması
+    $benzersizsayi1 = rand(20000, 32000);
+    $benzersizsayi2 = rand(20000, 32000);
+    $benzersizsayi3 = rand(20000, 32000);
+    $benzersizsayi4 = rand(20000, 32000);
+
+    $benzersizad = $benzersizsayi1 . $benzersizsayi2 . $benzersizsayi3 . $benzersizsayi4;
+    $refimgyol = substr($uploads_dir, 6) . "/" . $benzersizad . $name;
+    @move_uploaded_file($tmp_name, "$uploads_dir/$benzersizad$name");
+
+
+
+    $kaydet = $db->prepare("INSERT INTO slider SET
+		slider_ad=:slider_ad,
+		slider_sira=:slider_sira,
+		slider_link=:slider_link,
+		slider_resimyol=:slider_resimyol
+		");
+    $insert = $kaydet->execute(array(
+        'slider_ad' => $_POST['slider_ad'],
+        'slider_sira' => $_POST['slider_sira'],
+        'slider_link' => $_POST['slider_link'],
+        'slider_resimyol' => $refimgyol
+    ));
+
+    if ($insert) {
+
+        Header("Location:../production/slider.php?durum=ok");
+    } else {
+
+        Header("Location:../production/slider.php?durum=no");
+    }
+}
+
+if (isset($_GET['slidersil']) &&  $_GET['slidersil'] == "ok") {
+
+    $sil = $db->prepare("DELETE from slider where slider_id=:id");
+    $kontrol = $sil->execute(array(
+        'id' => $_GET['slider_id']
+    ));
+
+
+    if ($kontrol) {
+
+
+        header("location:../production/slider.php?sil=ok");
+    } else {
+
+        header("location:../production/slider.php?sil=no");
+    }
+}
+
 
 if (isset($_POST['admingiris'])) {
     // Kullanıcından gelen bilgieleri değişkene alma 
@@ -251,56 +348,50 @@ if (isset($_POST['kullaniciduzenle'])) {
 
 
 
-if (isset($_GET['kullanicisil']) &&  $_GET['kullanicisil']=="ok") {
+if (isset($_GET['kullanicisil']) &&  $_GET['kullanicisil'] == "ok") {
 
-	$sil=$db->prepare("DELETE from kullanici where kullanici_id=:id");
-	$kontrol=$sil->execute(array(
-		'id' => $_GET['kullanici_id']
-		));
-
-
-	if ($kontrol) {
+    $sil = $db->prepare("DELETE from kullanici where kullanici_id=:id");
+    $kontrol = $sil->execute(array(
+        'id' => $_GET['kullanici_id']
+    ));
 
 
-		header("location:../production/kullanici.php?sil=ok");
+    if ($kontrol) {
 
 
-	} else {
+        header("location:../production/kullanici.php?sil=ok");
+    } else {
 
-		header("location:../production/kullanici.php?sil=no");
-
-	}
+        header("location:../production/kullanici.php?sil=no");
+    }
 }
 
 
-if ($_GET['menusil']=="ok") {
+if (isset($_GET['menusil']) && $_GET['menusil'] == "ok") {
 
-	$sil=$db->prepare("DELETE from menu where menu_id=:id");
-	$kontrol=$sil->execute(array(
-		'id' => $_GET['menu_id']
-		));
+    $sil = $db->prepare("DELETE from menu where menu_id=:id");
+    $kontrol = $sil->execute(array(
+        'id' => $_GET['menu_id']
+    ));
 
-	if ($kontrol) {
-
-
-		header("location:../production/menu.php?sil=ok");
+    if ($kontrol) {
 
 
-	} else {
+        header("location:../production/menu.php?sil=ok");
+    } else {
 
-		header("location:../production/menu.php?sil=no");
-
-	}
+        header("location:../production/menu.php?sil=no");
+    }
 }
 
 if (isset($_POST['menuduzenle'])) {
 
-	$menu_id=$_POST['menu_id'];
+    $menu_id = $_POST['menu_id'];
 
-	$menu_seourl=seo($_POST['menu_ad']);
+    $menu_seourl = seo($_POST['menu_ad']);
 
-	
-	$ayarkaydet=$db->prepare("UPDATE menu SET
+
+    $ayarkaydet = $db->prepare("UPDATE menu SET
 		menu_ad=:menu_ad,
 		menu_detay=:menu_detay,
 		menu_url=:menu_url,
@@ -309,35 +400,33 @@ if (isset($_POST['menuduzenle'])) {
 		menu_durum=:menu_durum
 		WHERE menu_id={$_POST['menu_id']}");
 
-	$update=$ayarkaydet->execute(array(
-		'menu_ad' => $_POST['menu_ad'],
-		'menu_detay' => $_POST['menu_detay'],
-		'menu_url' => $_POST['menu_url'],
-		'menu_sira' => $_POST['menu_sira'],
-		'menu_seourl' => $menu_seourl,
-		'menu_durum' => $_POST['menu_durum']
-		));
+    $update = $ayarkaydet->execute(array(
+        'menu_ad' => $_POST['menu_ad'],
+        'menu_detay' => $_POST['menu_detay'],
+        'menu_url' => $_POST['menu_url'],
+        'menu_sira' => $_POST['menu_sira'],
+        'menu_seourl' => $menu_seourl,
+        'menu_durum' => $_POST['menu_durum']
+    ));
 
 
-	if ($update) {
+    if ($update) {
 
-		Header("Location:../production/menu-duzenle.php?menu_id=$menu_id&durum=ok");
+        Header("Location:../production/menu-duzenle.php?menu_id=$menu_id&durum=ok");
+    } else {
 
-	} else {
-
-		Header("Location:../production/menu-duzenle.php?menu_id=$menu_id&durum=no");
-	}
-
+        Header("Location:../production/menu-duzenle.php?menu_id=$menu_id&durum=no");
+    }
 }
 
 
 if (isset($_POST['menukaydet'])) {
 
 
-	$menu_seourl=seo($_POST['menu_ad']);
+    $menu_seourl = seo($_POST['menu_ad']);
 
 
-	$ayarekle=$db->prepare("INSERT INTO menu SET
+    $ayarekle = $db->prepare("INSERT INTO menu SET
 		menu_ad=:menu_ad,
 		menu_detay=:menu_detay,
 		menu_url=:menu_url,
@@ -346,23 +435,60 @@ if (isset($_POST['menukaydet'])) {
 		menu_durum=:menu_durum
 		");
 
-	$insert=$ayarekle->execute(array(
-		'menu_ad' => $_POST['menu_ad'],
-		'menu_detay' => $_POST['menu_detay'],
-		'menu_url' => $_POST['menu_url'],
-		'menu_sira' => $_POST['menu_sira'],
-		'menu_seourl' => $menu_seourl,
-		'menu_durum' => $_POST['menu_durum']
-		));
+    $insert = $ayarekle->execute(array(
+        'menu_ad' => $_POST['menu_ad'],
+        'menu_detay' => $_POST['menu_detay'],
+        'menu_url' => $_POST['menu_url'],
+        'menu_sira' => $_POST['menu_sira'],
+        'menu_seourl' => $menu_seourl,
+        'menu_durum' => $_POST['menu_durum']
+    ));
 
 
-	if ($insert) {
+    if ($insert) {
 
-		Header("Location:../production/menu.php?durum=ok");
+        Header("Location:../production/menu.php?durum=ok");
+    } else {
 
-	} else {
+        Header("Location:../production/menu.php?durum=no");
+    }
+}
 
-		Header("Location:../production/menu.php?durum=no");
-	}
 
+
+
+if (isset($_POST['logoduzenle'])) {
+
+
+
+    $uploads_dir = '../../dimg';
+
+    @$tmp_name = $_FILES['ayar_logo']["tmp_name"];
+    @$name = $_FILES['ayar_logo']["name"];
+
+    $benzersizsayi4 = rand(20000, 32000);
+    $refimgyol = substr($uploads_dir, 6) . "/" . $benzersizsayi4 . $name;
+
+    @move_uploaded_file($tmp_name, "$uploads_dir/$benzersizsayi4$name");
+
+
+    $duzenle = $db->prepare("UPDATE ayar SET
+		ayar_logo=:logo
+		WHERE ayar_id=0");
+    $update = $duzenle->execute(array(
+        'logo' => $refimgyol
+    ));
+
+
+
+    if ($update) {
+
+        $resimsilunlink = $_POST['eski_yol'];
+        unlink("../../$resimsilunlink");
+
+        Header("Location:../production/genel-ayar.php?durum=ok");
+    } else {
+
+        Header("Location:../production/genel-ayar.php?durum=no");
+    }
 }
