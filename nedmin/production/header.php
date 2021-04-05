@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 include '../netting/baglan.php';
+include 'fonksiyon.php';
 
 $ayarsor = $db->prepare("Select * from ayar 
 where ayar_id=:id");
@@ -37,12 +38,12 @@ if(!isset($_SESSION['kullanici_mail'])) {
 // eklediğimizde durumu kontrol edebiliriz.
 function checkDurum()
 {
-    if (isset($_GET['durum'])) {
-        if ($_GET['durum'] == "ok")
-            echo '<b style="color:green;">İşlem Başarılı...</b>';
-        elseif ($_GET['durum'] == "no")
-            echo '<b style="color:red;"> İşlem Başarısız...</b>';
-    }
+  if (isset($_GET['durum'])) {
+    if ($_GET['durum'] == "ok")
+      echo '<b style="color:green;">İşlem Başarılı...</b>';
+    elseif ($_GET['durum'] == "no")
+      echo '<b style="color:red;"> İşlem Başarısız...</b>';
+  }
 }
 
 ?>
@@ -115,9 +116,7 @@ function checkDurum()
               <ul class="nav side-menu">
 
                 <li><a href="index.php"><i class="fa fa-laptop"></i> Anasayfa</a></li>
-                <li><a href="hakkimizda.php"><i class="fa fa-info"></i> Hakkımızda</a></li>
-                <li><a href="kullanici.php"><i class="fa fa-user"></i> Kullanıcılar</a></li>
-                <li><a href="menu.php"><i class="fa fa-list"></i> Menüler</a></li>
+
                 <li><a><i class="fa fa-cogs"></i>Site Ayarları <span class="fa fa-cogs"></span></a>
                   <ul class="nav child_menu">
                     <li><a href="genel-ayar.php">Genel Ayarları</a></li>
@@ -125,10 +124,21 @@ function checkDurum()
                     <li><a href="api-ayarlar.php">API Ayarları</a></li>
                     <li><a href="so-ayarlar.php">Sosyal Ayarları</a></li>
                     <li><a href="mail-ayarlar.php">Mail Ayarları</a></li>
-                   
+
 
                   </ul>
                 </li>
+                <li><a href="hakkimizda.php"><i class="fa fa-info"></i> Hakkımızda</a></li>
+
+                <li><a href="kullanici.php"><i class="fa fa-user"></i> Kullanıcılar</a></li>
+
+                <li><a href="menu.php"><i class="fa fa-list"></i> Menüler</a></li>
+
+
+
+
+
+
 
               </ul>
             </div>

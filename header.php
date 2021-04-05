@@ -1,6 +1,7 @@
 <?php
 
 include 'nedmin/netting/baglan.php';
+include 'nedmin/production/fonksiyon.php';
 
 $ayarsor = $db->prepare("Select * from ayar 
 where ayar_id=:id");
@@ -21,9 +22,9 @@ $ayarcek = $ayarsor->fetch(PDO::FETCH_ASSOC);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title> <?php echo $ayarcek['ayar_title'] ?></title>
-    <meta name="description" content="<?php echo $ayarcek ['ayar_description']    ?>">
+    <meta name="description" content="<?php echo $ayarcek['ayar_description']    ?>">
     <meta name="keywords" content="<?php echo $ayarcek['ayar_keywords']    ?>">
-    <meta name="author" content="<?php  echo $ayarcek ['ayar_author']       ?>">
+    <meta name="author" content="<?php echo $ayarcek['ayar_author']       ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,400italic,700' rel='stylesheet' type='text/css'>
@@ -130,84 +131,40 @@ $ayarcek = $ayarsor->fetch(PDO::FETCH_ASSOC);
                             </div>
                             <div class="navbar-collapse collapse">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="index-1.htm" class="active">Home</a>
+                                    <li><a href="index-1.htm" class="active">Anasayfa</a>
                                         <div class="curve"></div>
                                     </li>
-                                    <li class="dropdown menu-large">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mega Menu</a>
-                                        <ul class="dropdown-menu megamenu container row">
-                                            <li class="col-sm-4">
-                                                <h4>Page Template</h4>
-                                                <ul>
-                                                    <li><a href="index-1.htm">Home Page</a></li>
-                                                    <li><a href="category.htm">Category Page</a></li>
-                                                    <li><a href="category-list.htm">Category List Page</a></li>
-                                                    <li><a href="category-fullwidth.htm">Category fullwidth</a></li>
-                                                    <li><a href="product.htm">Detail Product Page</a></li>
-                                                    <li><a href="page-sidebar.htm">Page with sidebar</a></li>
-                                                    <li><a href="register.htm">Register Page</a></li>
-                                                    <li><a href="order.htm">Order Page</a></li>
-                                                    <li><a href="checkout.htm">Checkout Page</a></li>
-                                                    <li><a href="cart.htm">Cart Page</a></li>
-                                                    <li><a href="contact.htm">Contact Page</a></li>
-                                                </ul>
-                                                <div class="dashed-nav"></div>
-                                            </li>
-                                            <li class="col-sm-4">
-                                                <h4>Page Template</h4>
-                                                <ul>
-                                                    <li><a href="index-1.htm">Home Page</a></li>
-                                                    <li><a href="category.htm">Category Page</a></li>
-                                                    <li><a href="category-list.htm">Category List Page</a></li>
-                                                    <li><a href="category-fullwidth.htm">Category fullwidth</a></li>
-                                                    <li><a href="product.htm">Detail Product Page</a></li>
-                                                    <li><a href="page-sidebar.htm">Page with sidebar</a></li>
-                                                    <li><a href="register.htm">Register Page</a></li>
-                                                    <li><a href="order.htm">Order Page</a></li>
-                                                    <li><a href="checkout.htm">Checkout Page</a></li>
-                                                    <li><a href="cart.htm">Cart Page</a></li>
-                                                    <li><a href="contact.htm">Contact Page</a></li>
-                                                </ul>
-                                                <div class="dashed-nav"></div>
-                                            </li>
-                                            <li class="col-sm-4">
-                                                <h4>Page Template</h4>
-                                                <ul>
-                                                    <li><a href="index-1.htm">Home Page</a></li>
-                                                    <li><a href="category.htm">Category Page</a></li>
-                                                    <li><a href="category-list.htm">Category List Page</a></li>
-                                                    <li><a href="category-fullwidth.htm">Category fullwidth</a></li>
-                                                    <li><a href="product.htm">Detail Product Page</a></li>
-                                                    <li><a href="page-sidebar.htm">Page with sidebar</a></li>
-                                                    <li><a href="register.htm">Register Page</a></li>
-                                                    <li><a href="order.htm">Order Page</a></li>
-                                                    <li><a href="checkout.htm">Checkout Page</a></li>
-                                                    <li><a href="cart.htm">Cart Page</a></li>
-                                                    <li><a href="contact.htm">Contact Page</a></li>
-                                                </ul>
-                                                <div class="dashed-nav"></div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="index-1.htm">Home Page</a></li>
-                                            <li><a href="category.htm">Category Page</a></li>
-                                            <li><a href="category-list.htm">Category List Page</a></li>
-                                            <li><a href="category-fullwidth.htm">Category fullwidth</a></li>
-                                            <li><a href="product.htm">Detail Product Page</a></li>
-                                            <li><a href="page-sidebar.htm">Page with sidebar</a></li>
-                                            <li><a href="register.htm">Register Page</a></li>
-                                            <li><a href="order.htm">Order Page</a></li>
-                                            <li><a href="cart.htm">Cart Page</a></li>
-                                            <li><a href="checkout.htm">Checkout Page</a></li>
-                                            <li><a href="contact.htm">Contact Page</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="hakkimizda.php">About</a></li>
-                                    <li><a href="category.htm">Product</a></li>
-                                    <li><a href="contact.htm">Contact</a></li>
+
+                                    <?php
+
+                                    $menusor = $db->prepare("SELECT * FROM menu where menu_durum=:durum order by menu_sira ASC limit 5");
+                                    $menusor->execute(array(
+                                        'durum' => 1
+                                    ));
+
+                                    while ($menucek = $menusor->fetch(PDO::FETCH_ASSOC)) {
+                                    ?>
+                                    
+
+
+                                        <li><a href="
+
+   <?php
+
+                                        if (!empty($menucek['menu_url'])) {
+
+                                            echo $menucek['menu_url'];
+                                        } else {
+
+
+                                            echo "sayfa-" . seo($menucek['menu_ad']);
+                                        }
+    ?>
+
+
+   "><?php echo $menucek['menu_ad'] ?></a></li>
+
+                                    <?php } ?>
                                 </ul>
                             </div>
                         </div>
