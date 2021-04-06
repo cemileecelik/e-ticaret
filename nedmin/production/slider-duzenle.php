@@ -149,13 +149,6 @@ $slidercek = $slidersor->fetch(PDO::FETCH_ASSOC);
     <hr>
     <hr>
     <hr>
-
-
-
-
-
-
-
   </div>
 </div>
 
