@@ -17,6 +17,40 @@ if (isset($_POST['kullanicikaydet'])) {
         if ($kullanici_passwordone >= 6) {
 
 
+            if (isset($_POST['menuduzenle'])) {
+
+                $menu_id = $_POST['menu_id'];
+            
+                $menu_seourl = seo($_POST['menu_ad']);
+            
+            
+                $ayarkaydet = $db->prepare("UPDATE menu SET
+                    menu_ad=:menu_ad,
+                    menu_detay=:menu_detay,
+                    menu_url=:menu_url,
+                    menu_sira=:menu_sira,
+                    menu_seourl=:menu_seourl,
+                    menu_durum=:menu_durum
+                    WHERE menu_id={$_POST['menu_id']}");
+            
+                $update = $ayarkaydet->execute(array(
+                    'menu_ad' => $_POST['menu_ad'],
+                    'menu_detay' => $_POST['menu_detay'],
+                    'menu_url' => $_POST['menu_url'],
+                    'menu_sira' => $_POST['menu_sira'],
+                    'menu_seourl' => $menu_seourl,
+                    'menu_durum' => $_POST['menu_durum']
+                ));
+            
+            
+                if ($update) {
+            
+                    Header("Location:../production/menu-duzenle.php?menu_id=$menu_id&durum=ok");
+                } else {
+            
+                    Header("Location:../production/menu-duzenle.php?menu_id=$menu_id&durum=no");
+                }
+            }
             // Başlangıç
 
             $kullanicisor = $db->prepare("select * from kullanici where kullanici_mail =: mail");
@@ -38,8 +72,10 @@ if (isset($_POST['kullanicikaydet'])) {
     kullanici_adsoyad=:kullanici_adsoyad,
     kullanici_mail=:kullanici_mail,
     kullanici_password=:kullanici_password,
-    kullanici_yetki=:kullanici_yetki
+    kullanici_yetki=:kullanici_yetki,
+    kullanici_durum = 1
     ");
+
                 $insert = $kullanicikaydet->execute(array(
                     'kullanici_adsoyad' => $kullanici_adsoyad,
                     'kullanici_mail' => $kullanici_mail,
@@ -202,7 +238,7 @@ if (isset($_POST['admingiris'])) {
 
 
 if (isset($_POST['kullanicigiris'])) {
-    
+
     // Kullanıcından gelen bilgieleri değişkene alma 
     echo $kullanici_mail = htmlspecialchars($_POST['kullanici_mail']);
     echo $kullanici_password = md5($_POST['kullanici_password']);
@@ -217,6 +253,7 @@ if (isset($_POST['kullanicigiris'])) {
 
     $say = $kullanicisor->rowCount();
     if ($say == 1) {
+
         echo $_SESSION['userkullanici_mail'] = $kullanici_mail;
         echo "jfhdf";
         header("Location:../../");
@@ -581,3 +618,192 @@ if (isset($_POST['logoduzenle'])) {
         Header("Location:../production/genel-ayar.php?durum=no");
     }
 }
+
+
+
+
+
+if (isset($_POST['kategoriduzenle'])) {
+
+    $kategori_id = $_POST['kategori_id'];
+
+    $kategori_seourl = seo($_POST['kategori_ad']);
+
+
+    $ayarkaydet = $db->prepare("UPDATE kategori SET
+		kategori_ad=:kategori_ad,
+		kategori_sira=:kategori_sira,
+		kategori_seourl=:kategori_seourl,
+		kategori_durum=:kategori_durum
+		WHERE kategori_id={$_POST['kategori_id']}");
+
+    $update = $ayarkaydet->execute(array(
+        'kategori_ad' => $_POST['kategori_ad'],
+        'kategori_sira' => $_POST['kategori_sira'],
+        'kategori_seourl' => $kategori_seourl,
+        'kategori_durum' => $_POST['kategori_durum']
+    ));
+
+
+    if ($update) {
+
+        Header("Location:../production/kategori-duzenle.php?kategori_id=$kategori_id&durum=ok");
+    } else {
+
+        Header("Location:../production/kategori-duzenle.php?kategori_id=$kategori_id&durum=no");
+    }
+}
+
+
+
+if (isset($_GET['kategorisil']) && $_GET['kategorisil'] == "ok") {
+
+    $sil = $db->prepare("DELETE from kategori where kategori_id=:id");
+    $kontrol = $sil->execute(array(
+        'id' => $_GET['kategori_id']
+    ));
+
+    if ($kontrol) {
+
+
+        header("location:../production/kategori.php?sil=ok");
+    } else {
+
+        header("location:../production/kategori.php?sil=no");
+    }
+}
+
+if (isset($_GET['urunsil']) && $_GET['urunsil'] == "ok") {
+
+    $sil = $db->prepare("DELETE from urun where urun_id=:id");
+    $kontrol = $sil->execute(array(
+        'id' => $_GET['urun_id']
+    ));
+    
+    if ($kontrol) {
+    
+    
+        header("location:../production/urun.php?sil=ok");
+    } else {
+    
+        header("location:../production/urun.php?sil=no");
+    }
+    }
+    
+
+
+if (isset($_POST['kategoriekle'])) {
+
+    $kategori_seourl = seo($_POST['kategori_ad']);
+
+
+    $kaydet = $db->prepare("INSERT INTO kategori SET
+		kategori_ad=:kategori_ad,
+		kategori_sira=:kategori_sira,
+		kategori_seourl=:kategori_seourl,
+		kategori_durum=:kategori_durum
+		");
+
+    $insert = $kaydet->execute(array(
+        'kategori_ad' => $_POST['kategori_ad'],
+        'kategori_sira' => $_POST['kategori_sira'],
+        'kategori_seourl' => $kategori_seourl,
+        'kategori_durum' => $_POST['kategori_durum']
+    ));
+
+
+    if ($insert) {
+
+        Header("Location:../production/kategori.php?durum=ok");
+    } else {
+
+        Header("Location:../production/kategori.php?durum=no");
+    }
+}
+
+
+
+
+if (isset($_POST['urunduzenle'])) {
+
+    $urun_id=$_POST['urun_id'];
+    $urun_seourl = seo($_POST['urun_ad']);
+    
+    
+    $kaydet = $db->prepare("UPDATE urun SET
+        kategori_id=:kategori_id,
+        urun_ad=:urun_ad,
+        urun_detay=:urun_detay,
+        urun_fiyat=:urun_fiyat,
+        urun_video=:urun_video,
+        urun_keyword=:urun_keyword,
+        urun_stok=:urun_stok,
+        urun_sira=:urun_sira,
+        urun_seourl=:urun_seourl,
+        urun_durum=:urun_durum,
+        WHERE urun_id={$_POST['urun_id']}
+        ");
+    
+    $update = $kaydet->execute(array(
+        'kategori_id' => $_POST['kategori_id'],
+        'urun_ad' => $_POST['urun_ad'],
+        'urun_detay' => $_POST['urun_detay'],
+        'urun_fiyat' => $_POST['urun_fiyat'],
+        'urun_video' => $_POST['urun_video'],
+        'urun_keyword' => $_POST['urun_keyword'],
+        'urun_stok' => $_POST['urun_stok'],
+        'urun_sira' => $_POST['urun_sira'],
+        'urun_seourl' => $urun_seourl,
+        'urun_durum' => $_POST['urun_durum']
+    ));
+    
+    
+    if ($update) {
+    
+        Header("Location:../production/urun-duzenle.php?durum=ok");
+    } else {
+    
+        Header("Location:../production/urun-duzenle.php?durum=no");
+    }
+    }
+
+    if (isset($_POST['urunekle'])) {
+
+        $urun_seourl = seo($_POST['urun_ad']);
+        
+        
+        $kaydet = $db->prepare("INSERT INTO urun SET
+            kategori_id=:kategori_id,
+            urun_ad=:urun_ad,
+            urun_detay=:urun_detay,
+            urun_fiyat=:urun_fiyat,
+            urun_video=:urun_video,
+            urun_keyword=:urun_keyword,
+            urun_stok=:urun_stok,
+            urun_sira=:urun_sira,
+            urun_seourl=:urun_seourl,
+            urun_durum=:urun_durum
+            ");
+        
+        $insert = $kaydet->execute(array(
+            'kategori_id' => $_POST['kategori_id'],
+            'urun_ad' => $_POST['urun_ad'],
+            'urun_detay' => $_POST['urun_detay'],
+            'urun_fiyat' => $_POST['urun_fiyat'],
+            'urun_video' => $_POST['urun_video'],
+            'urun_keyword' => $_POST['urun_keyword'],
+            'urun_stok' => $_POST['urun_stok'],
+            'urun_sira' => $_POST['urun_sira'],
+            'urun_seourl' => $urun_seourl,
+            'urun_durum' => $_POST['urun_durum']
+        ));
+        
+        
+        if ($update) {
+
+            Header("Location:../production/urun-duzenle.php?urun_id=$urun_id&durum=ok");
+        } else {
+    
+            Header("Location:../production/urun-duzenle.php?urun_id=$urun_id&durum=no");
+        }
+        }

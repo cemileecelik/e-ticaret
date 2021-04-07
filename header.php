@@ -13,8 +13,6 @@ $ayarsor->execute(array(
 
 $ayarcek = $ayarsor->fetch(PDO::FETCH_ASSOC);
 
-
-
 $kullanicisor=$db->prepare("SELECT * FROM kullanici where kullanici_mail=:mail");
 $kullanicisor->execute(array(
   'mail' => $_SESSION['userkullanici_mail']
@@ -167,7 +165,7 @@ $kullanicicek=$kullanicisor->fetch(PDO::FETCH_ASSOC);
                             </div>
                             <div class="navbar-collapse collapse">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="index-1.htm" class="active">Anasayfa</a>
+                                    <li><a href="index.php" class="active">Anasayfa</a>
                                         <div class="curve"></div>
                                     </li>
 
