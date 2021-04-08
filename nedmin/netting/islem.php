@@ -738,11 +738,9 @@ if (isset($_POST['urunduzenle'])) {
         urun_video=:urun_video,
         urun_keyword=:urun_keyword,
         urun_stok=:urun_stok,
-        urun_sira=:urun_sira,
         urun_seourl=:urun_seourl,
-        urun_durum=:urun_durum,
-        WHERE urun_id={$_POST['urun_id']}
-        ");
+        urun_durum=:urun_durum
+        WHERE urun_id=$urun_id");
     
     $update = $kaydet->execute(array(
         'kategori_id' => $_POST['kategori_id'],
@@ -752,7 +750,6 @@ if (isset($_POST['urunduzenle'])) {
         'urun_video' => $_POST['urun_video'],
         'urun_keyword' => $_POST['urun_keyword'],
         'urun_stok' => $_POST['urun_stok'],
-        'urun_sira' => $_POST['urun_sira'],
         'urun_seourl' => $urun_seourl,
         'urun_durum' => $_POST['urun_durum']
     ));
@@ -760,10 +757,9 @@ if (isset($_POST['urunduzenle'])) {
     
     if ($update) {
     
-        Header("Location:../production/urun-duzenle.php?durum=ok");
+        Header("Location:../production/urun-duzenle.php?urun_id=" . $urun_id . "&durum=ok");
     } else {
-    
-        Header("Location:../production/urun-duzenle.php?durum=no");
+        Header("Location:../production/urun-duzenle.php?urun_id=" . $urun_id . "&durum=ok");
     }
     }
 
@@ -780,11 +776,10 @@ if (isset($_POST['urunduzenle'])) {
             urun_video=:urun_video,
             urun_keyword=:urun_keyword,
             urun_stok=:urun_stok,
-            urun_sira=:urun_sira,
             urun_seourl=:urun_seourl,
             urun_durum=:urun_durum
             ");
-        
+   
         $insert = $kaydet->execute(array(
             'kategori_id' => $_POST['kategori_id'],
             'urun_ad' => $_POST['urun_ad'],
@@ -793,17 +788,14 @@ if (isset($_POST['urunduzenle'])) {
             'urun_video' => $_POST['urun_video'],
             'urun_keyword' => $_POST['urun_keyword'],
             'urun_stok' => $_POST['urun_stok'],
-            'urun_sira' => $_POST['urun_sira'],
             'urun_seourl' => $urun_seourl,
             'urun_durum' => $_POST['urun_durum']
         ));
-        
-        
-        if ($update) {
-
-            Header("Location:../production/urun-duzenle.php?urun_id=$urun_id&durum=ok");
+    
+        if ($insert) {
+            Header("Location:../production/urun.php?durum=ok");
         } else {
     
-            Header("Location:../production/urun-duzenle.php?urun_id=$urun_id&durum=no");
+            Header("Location:../production/urun.php?durum=no");
         }
         }

@@ -42,7 +42,7 @@ $urunsor->execute();
                                     <th>S.No</th>
                                     <th>Ürün Ad</th>
                                     <th>Ürün Fiyat</th>
-                                    <th>Ürün Stok</th>s
+                                    <th>Ürün Stok</th>
                                     <th></th>
                                     <th></th>
                                 </tr>

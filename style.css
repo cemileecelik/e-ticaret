@@ -501,6 +501,7 @@ html,body {
 
 .on-sale {
 	background:#ffc513 url(images/noise.png) !important;
+	min-width: fit-content;
 }
 .on-sale .inner  {
 	background:#ffc513 url(images/noise.png) !important;
